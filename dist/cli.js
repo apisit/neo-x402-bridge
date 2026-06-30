@@ -759,6 +759,17 @@ async function cmdStatus() {
   }
 }
 async function cmdStart() {
+  if (!walletExists()) {
+    const owner = process.env.BRIDGE_OWNER_ADDRESS;
+    if (!owner || !isAddress2(owner)) {
+      console.error(
+        `\u2717 No agent wallet yet, and BRIDGE_OWNER_ADDRESS isn't set. Set it to your own wallet address so the bridge can create an agent wallet for you.`
+      );
+      process.exit(1);
+    }
+    const { account: account2 } = createWallet({ owner });
+    console.error(`\u2713 created agent wallet ${account2.address} (owner ${owner}) at ${DEFAULT_PATH}`);
+  }
   const { file, account } = loadWallet();
   const treasury = process.env.GAME_TREASURY_ADDRESS;
   if (!treasury || !isAddress2(treasury)) {

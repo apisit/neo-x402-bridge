@@ -1,0 +1,48 @@
+{
+  "manifest_version": "0.2",
+  "name": "neo-x402-bridge",
+  "display_name": "Neo X x402 Agent Bridge",
+  "version": "0.1.0",
+  "description": "Spawn an on-device agent wallet so an AI can make real on-chain micropayments on Neo X — for the Infinity demo.",
+  "long_description": "Creates a disposable agent wallet on your machine (key stored at ~/.x402-bridge/wallet.json) and exposes it to Claude over MCP. The AI can only pay the game treasury and only withdraw to your own wallet, so it never has arbitrary signing power. The wallet is created automatically the first time it runs, from the wallet address you enter below.",
+  "author": {
+    "name": "apisit",
+    "url": "https://github.com/apisit/neo-x402-bridge"
+  },
+  "homepage": "https://github.com/apisit/neo-x402-bridge",
+  "server": {
+    "type": "node",
+    "entry_point": "dist/cli.js",
+    "mcp_config": {
+      "command": "node",
+      "args": ["${__dirname}/dist/cli.js", "start"],
+      "env": {
+        "BRIDGE_OWNER_ADDRESS": "${user_config.owner}",
+        "GAME_TREASURY_ADDRESS": "${user_config.treasury}",
+        "GAME_SERVICE_URL": "${user_config.service_url}"
+      }
+    }
+  },
+  "user_config": {
+    "owner": {
+      "type": "string",
+      "title": "Your wallet address",
+      "description": "Your own wallet (e.g. MetaMask on Neo X). The agent's leftover xGAS can only ever be withdrawn back here — a safety guardrail. This also becomes the agent's owner.",
+      "required": true
+    },
+    "treasury": {
+      "type": "string",
+      "title": "Game treasury address",
+      "description": "The game's treasury that receives loot-box payments.",
+      "default": "0x002dD52c108A8CF557234F046B88f7f763916ba8",
+      "required": true
+    },
+    "service_url": {
+      "type": "string",
+      "title": "Game service URL",
+      "description": "The deployed game service the agent talks to.",
+      "default": "https://neo-x402-service-production.up.railway.app",
+      "required": true
+    }
+  }
+}
