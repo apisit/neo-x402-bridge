@@ -1,0 +1,22 @@
+{
+  "name": "neo-x402-bridge",
+  "version": "0.1.0",
+  "description": "Local x402 agent bridge for the Neo X 'Infinity' demo — spawns an agent wallet and exposes it to Claude Desktop (or any MCP client) so an AI can make real on-chain micropayments on Neo X. Distributed as a prebuilt bundle so `npx github:apisit/neo-x402-bridge` needs no build step.",
+  "type": "module",
+  "license": "MIT",
+  "bin": {
+    "x402-bridge": "dist/cli.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.4",
+    "dotenv": "^16.4.5",
+    "viem": "^2.21.45",
+    "zod": "^3.23.8"
+  }
+}
