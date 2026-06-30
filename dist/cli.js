@@ -637,7 +637,7 @@ async function runMcpServer(opts) {
       await fetch(`${opts.gameServiceUrl}/api/agent/heartbeat`, {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ agent: opts.account.address })
+        body: JSON.stringify({ agent: opts.account.address, owner: opts.owner })
       });
     } catch {
     }
