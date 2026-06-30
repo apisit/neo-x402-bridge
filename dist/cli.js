@@ -202,7 +202,7 @@ function body(payment, requirement) {
 import { formatUnits as formatUnits3, isAddress as isAddress2, parseUnits as parseUnits2 } from "viem";
 
 // src/wallet.ts
-import { existsSync as existsSync2, mkdirSync, readFileSync, statSync, writeFileSync, chmodSync } from "node:fs";
+import { copyFileSync, existsSync as existsSync2, mkdirSync, readFileSync, statSync, writeFileSync, chmodSync } from "node:fs";
 import { dirname as dirname2, join } from "node:path";
 import { homedir } from "node:os";
 import {
@@ -242,6 +242,16 @@ function createWallet(opts) {
   if (!isAddress(opts.owner)) throw new Error(`invalid owner address: ${opts.owner}`);
   const path = opts.path ?? DEFAULT_PATH;
   if (existsSync2(path) && !opts.force) throw new WalletAlreadyExists(path);
+  if (existsSync2(path) && opts.force) {
+    const stamp = (/* @__PURE__ */ new Date()).toISOString().replace(/[:.]/g, "-");
+    const backup = `${path}.bak-${stamp}`;
+    copyFileSync(path, backup);
+    try {
+      chmodSync(backup, 384);
+    } catch {
+    }
+    console.error(`\u21A9 backed up previous wallet \u2192 ${backup}`);
+  }
   mkdirSync(dirname2(path), { recursive: true });
   const privateKey = generatePrivateKey();
   const account = privateKeyToAccount(privateKey);
